@@ -1,0 +1,218 @@
+{
+  "constant_rate": {
+    "status": "individual_parameters_not_identifiable",
+    "acceleration_rad_per_s2": 0.0,
+    "tau_s": null,
+    "phi_rad": null,
+    "individual_parameter_covariance": null,
+    "estimable_combination": {
+      "expression": "omega * tau + phi",
+      "omega_rad_per_s": 0.8,
+      "estimate_rad": 0.003737044338158108,
+      "std_rad": 0.003333333333333333
+    },
+    "local_report": {
+      "rank": 1,
+      "parameter_count": 2,
+      "singular_values": [
+        38.41874542459709,
+        2.4399674843781068e-15
+      ],
+      "rank_relative_threshold": 1e-10,
+      "weak_relative_threshold": 0.01,
+      "parameter_scales": [
+        0.1,
+        0.1
+      ],
+      "constrained_scaled_directions": [
+        [
+          -0.6246950475544244,
+          -0.7808688094430302
+        ]
+      ],
+      "null_scaled_directions": [
+        [
+          0.7808688094430302,
+          -0.6246950475544244
+        ]
+      ],
+      "weak_constrained_scaled_directions": [],
+      "worst_constrained_scaled_std": 0.026028960314767677,
+      "individual_parameters_supported": false
+    }
+  },
+  "accelerating": {
+    "status": "locally_identifiable",
+    "acceleration_rad_per_s2": 0.2,
+    "tau_s": 0.12252266202202249,
+    "phi_rad": -0.09636039516797403,
+    "individual_parameter_covariance": [
+      [
+        5.081300813008128e-05,
+        -8.254596201241888e-05
+      ],
+      [
+        -8.254596201241888e-05,
+        0.00014520740053196736
+      ]
+    ],
+    "local_std_tau_s": 0.007128324356402512,
+    "local_std_phi_rad": 0.012050203339859763,
+    "local_report": {
+      "rank": 2,
+      "parameter_count": 2,
+      "singular_values": [
+        58.481842576612316,
+        7.196357902893961
+      ],
+      "rank_relative_threshold": 1e-10,
+      "weak_relative_threshold": 0.01,
+      "parameter_scales": [
+        0.1,
+        0.1
+      ],
+      "constrained_scaled_directions": [
+        [
+          -0.864974422036987,
+          -0.5018159515417779
+        ],
+        [
+          0.5018159515417779,
+          -0.864974422036987
+        ]
+      ],
+      "null_scaled_directions": [],
+      "weak_constrained_scaled_directions": [],
+      "worst_constrained_scaled_std": 0.13895918094872095,
+      "individual_parameters_supported": true
+    }
+  },
+  "weak_acceleration": {
+    "status": "locally_identifiable",
+    "acceleration_rad_per_s2": 0.0001,
+    "tau_s": 0.12000000000010601,
+    "phi_rad": -0.08000000000008482,
+    "individual_parameter_covariance": [
+      [
+        203.25203252033663,
+        -162.68536585366772
+      ],
+      [
+        -162.68536585366772,
+        130.21533016477704
+      ]
+    ],
+    "local_std_tau_s": 14.256648712805427,
+    "local_std_phi_rad": 11.411193196365446,
+    "local_report": {
+      "rank": 2,
+      "parameter_count": 2,
+      "singular_values": [
+        38.42646811745333,
+        0.005476124799130828
+      ],
+      "rank_relative_threshold": 1e-10,
+      "weak_relative_threshold": 0.01,
+      "parameter_scales": [
+        0.1,
+        0.1
+      ],
+      "constrained_scaled_directions": [
+        [
+          -0.6248911705983898,
+          -0.7807118706079562
+        ],
+        [
+          0.7807118706079562,
+          -0.6248911705983898
+        ]
+      ],
+      "null_scaled_directions": [],
+      "weak_constrained_scaled_directions": [
+        [
+          0.7807118706079562,
+          -0.6248911705983898
+        ]
+      ],
+      "worst_constrained_scaled_std": 182.61088574144992,
+      "individual_parameters_supported": true
+    }
+  },
+  "selection": {
+    "candidate_segments": 12,
+    "selected_segments": 4,
+    "acceleration_rad_per_s2": 0.2,
+    "observations_per_segment": 6,
+    "duration_per_segment_s": 0.5,
+    "number_of_subsets_enumerated": 495,
+    "selection_score": "2 * sum(log(singular_values(J_scaled_whitened)))",
+    "even_subset_zero_based": [
+      0,
+      4,
+      7,
+      11
+    ],
+    "even_tau_std_s": 0.0075887379005312085,
+    "information_subset_zero_based": [
+      0,
+      1,
+      10,
+      11
+    ],
+    "information_tau_std_s": 0.006089817271684378,
+    "random_tau_std_s_quantiles_10_50_90": [
+      0.007588737900531208,
+      0.009918778152322009,
+      0.016298571945469006
+    ],
+    "information_gain_determinant_over_even": 1.5528538520604036,
+    "constant_rate_all_subset_ranks": [
+      1
+    ],
+    "interpretation": "For this quadratic reference, D-optimal selection is maximum time spread. This is a correctness check, not a new selection method.",
+    "monte_carlo": {
+      "trials": 5000,
+      "seed": 42,
+      "paired_full_recordings": true,
+      "information_tau_rmse_s": 0.005984672250311014,
+      "even_tau_rmse_s": 0.007559655221827754,
+      "random_tau_rmse_s": 0.011589431264888372,
+      "random_predicted_root_mean_variance_s": 0.011813807557707626
+    }
+  },
+  "checks": [
+    "constant_rate: singular values invariant to seconds/milliseconds with physical scales preserved",
+    "constant rate: exact likelihood ridge and refusal of individual estimates",
+    "accelerating: singular values invariant to seconds/milliseconds with physical scales preserved",
+    "accelerating: exact regression oracle matches nonlinear least squares; noiseless truth recovered",
+    "selection: all 495 equal-budget subsets checked; none rescues constant-rate degeneracy",
+    "selection: shared SVD covariance matches analytic timing variance for every subset",
+    "selection: 5000 paired Monte Carlo recordings agree with predicted timing variance within 5 percent",
+    "acceleration with repeated identical sample times remains rank deficient",
+    "weak acceleration: full numerical rank does not imply useful precision; near-null direction flagged",
+    "near-singular a=1e-8 covariance agrees with exact timing variance; no squared-condition-number failure",
+    "shared SVD covariance: physical covariance invariant to timing units; rank-one input refused"
+  ],
+  "assumptions": {
+    "reference": "known, unwrapped, theta0=0.2 rad, omega0=0.8 rad/s",
+    "parameters": [
+      "tau [s]",
+      "phi [rad]"
+    ],
+    "truth": [
+      0.12,
+      -0.08
+    ],
+    "noise_std_rad": 0.03,
+    "samples": 81,
+    "noise_seed": 20260914,
+    "scope": "Local scaled Jacobian report; structural degeneracy also proven analytically for the stated model. Reference uncertainty, wrapping, drift and nuisance calibration parameters excluded."
+  },
+  "environment": {
+    "python": "3.12.14",
+    "numpy": "2.3.5",
+    "scipy": "1.17.0",
+    "matplotlib": "3.10.8",
+    "device": "CPU"
+  }
+}

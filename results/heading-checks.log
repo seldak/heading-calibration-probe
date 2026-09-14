@@ -1,0 +1,11 @@
+PASS: constant_rate: singular values invariant to seconds/milliseconds with physical scales preserved
+PASS: constant rate: exact likelihood ridge and refusal of individual estimates
+PASS: accelerating: singular values invariant to seconds/milliseconds with physical scales preserved
+PASS: accelerating: exact regression oracle matches nonlinear least squares; noiseless truth recovered
+PASS: selection: all 495 equal-budget subsets checked; none rescues constant-rate degeneracy
+PASS: selection: shared SVD covariance matches analytic timing variance for every subset
+PASS: selection: 5000 paired Monte Carlo recordings agree with predicted timing variance within 5 percent
+PASS: acceleration with repeated identical sample times remains rank deficient
+PASS: weak acceleration: full numerical rank does not imply useful precision; near-null direction flagged
+PASS: near-singular a=1e-8 covariance agrees with exact timing variance; no squared-condition-number failure
+PASS: shared SVD covariance: physical covariance invariant to timing units; rank-one input refused
