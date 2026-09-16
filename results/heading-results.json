@@ -16,7 +16,7 @@
       "parameter_count": 2,
       "singular_values": [
         38.41874542459709,
-        2.4399674843781068e-15
+        2.4404887518273677e-15
       ],
       "rank_relative_threshold": 1e-10,
       "weak_relative_threshold": 0.01,
@@ -94,22 +94,22 @@
     "phi_rad": -0.08000000000008482,
     "individual_parameter_covariance": [
       [
-        203.25203252033663,
-        -162.68536585366772
+        203.2520325203384,
+        -162.68536585366917
       ],
       [
-        -162.68536585366772,
-        130.21533016477704
+        -162.68536585366917,
+        130.2153301647782
       ]
     ],
-    "local_std_tau_s": 14.256648712805427,
-    "local_std_phi_rad": 11.411193196365446,
+    "local_std_tau_s": 14.256648712805488,
+    "local_std_phi_rad": 11.411193196365497,
     "local_report": {
       "rank": 2,
       "parameter_count": 2,
       "singular_values": [
         38.42646811745333,
-        0.005476124799130828
+        0.005476124799130804
       ],
       "rank_relative_threshold": 1e-10,
       "weak_relative_threshold": 0.01,
@@ -134,7 +134,7 @@
           -0.6248911705983898
         ]
       ],
-      "worst_constrained_scaled_std": 182.61088574144992,
+      "worst_constrained_scaled_std": 182.61088574145072,
       "individual_parameters_supported": true
     }
   },
@@ -152,7 +152,7 @@
       7,
       11
     ],
-    "even_tau_std_s": 0.0075887379005312085,
+    "even_tau_std_s": 0.007588737900531209,
     "information_subset_zero_based": [
       0,
       1,
@@ -161,9 +161,9 @@
     ],
     "information_tau_std_s": 0.006089817271684378,
     "random_tau_std_s_quantiles_10_50_90": [
-      0.007588737900531208,
+      0.007588737900531207,
       0.009918778152322009,
-      0.016298571945469006
+      0.016298571945469003
     ],
     "information_gain_determinant_over_even": 1.5528538520604036,
     "constant_rate_all_subset_ranks": [
@@ -209,7 +209,7 @@
     "scope": "Local scaled Jacobian report; structural degeneracy also proven analytically for the stated model. Reference uncertainty, wrapping, drift and nuisance calibration parameters excluded."
   },
   "environment": {
-    "python": "3.12.14",
+    "python": "3.14.4",
     "numpy": "2.3.5",
     "scipy": "1.17.0",
     "matplotlib": "3.10.8",

@@ -18,7 +18,8 @@ at the injected parameters.
 
 ## Reproduce
 
-With Python **3.12** and a POSIX shell installed, run from this directory:
+With Python **3.12, 3.13 or 3.14** and a POSIX shell installed, run from this
+directory:
 
 ```sh
 ./reproduce.sh
@@ -27,9 +28,17 @@ With Python **3.12** and a POSIX shell installed, run from this directory:
 The script creates a local `.venv`, installs the pinned requirements and runs
 the probe with its assertions. It regenerates both figures,
 `results/heading-results.json`, `results/heading-observations.csv` and
-`results/heading-checks.log`. The first run downloads dependencies. To choose
-a Python 3.12 executable, use `HEADING_PYTHON=/path/to/python3.12 ./reproduce.sh`.
-The recorded run used Python 3.12.14 on CPU. No GPU performance is claimed.
+`results/heading-checks.log`. The first run downloads dependencies. To choose a
+specific supported interpreter, use
+`HEADING_PYTHON=/path/to/python ./reproduce.sh`. If `.venv` already exists, the
+script verifies that its Python major/minor version matches the selected
+interpreter rather than silently reusing a stale environment. The committed
+report was recorded with Python 3.14.4 on CPU. No GPU performance is claimed.
+
+The [reproduction workflow](.github/workflows/reproduce.yml) runs the same command
+on fresh Ubuntu checkouts with Python 3.12, 3.13 and 3.14 for pushes and pull
+requests, and can also be triggered manually. Each job creates a new virtual
+environment and regenerates the outputs while running the numerical checks.
 
 ## The model and the refusal
 
