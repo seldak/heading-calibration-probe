@@ -65,6 +65,12 @@ its variance formula above is exact under the stated Gaussian model. The full
 a nonlinear function of the fitted slope. Large timing uncertainty should not
 be interpreted as a tight joint Gaussian approximation in those parameters.
 
+The precision report uses **marginal** 95% interval half-widths, `1.96 * std`,
+not the width of a joint contour. For timing this uses the Gaussian slope
+estimator above; for yaw it uses the local linearization, not an exact coverage
+claim. Each half-width is compared only to a tolerance in its own physical
+units. Changing a tolerance changes neither the fit nor its numerical rank.
+
 At constant rotation, only `omega0 * tau + phi` is estimable. Its MLE is the mean
 of `z - theta(t)`, with standard deviation `sigma / sqrt(n)`. The displayed ridge
 uses this MLE. The injected combination differs because of the fixed noise draw.

@@ -53,7 +53,7 @@ def identifiability(jacobian, sigma, parameter_scales, rank_rtol=1e-10, weak_rto
         "null_scaled_directions": vt[rank:].tolist(),
         "weak_constrained_scaled_directions": vt[weak].tolist(),
         "worst_constrained_scaled_std": float(1 / s[rank-1]) if rank else None,
-        "individual_parameters_supported": rank == J.shape[1],
+        "jacobian_full_column_rank": rank == J.shape[1],
     }
 
 
@@ -105,6 +105,25 @@ def fit_heading(t, z, acceleration, sigma, scales=(0.1, 0.1), omega=0.8):
             "local_std_tau_s": float(np.sqrt(cov[0, 0])),
             "local_std_phi_rad": float(np.sqrt(cov[1, 1])),
             "local_report": report}
+
+
+def precision_report(fit, *, timing_tolerance_s=None, yaw_tolerance_rad=None):
+    """Compare marginal 95% half-widths to application tolerances, without changing the fit."""
+    def marginal(std, tolerance):
+        if tolerance is not None and not (0 <= tolerance < float("inf")):
+            raise ValueError("Half-width tolerances must be finite and nonnegative")
+        half_width = None if std is None else 1.96 * std
+        meets = None if half_width is None or tolerance is None else half_width <= tolerance
+        return half_width, meets
+
+    timing, timing_meets = marginal(fit.get("local_std_tau_s"), timing_tolerance_s)
+    yaw, yaw_meets = marginal(fit.get("local_std_phi_rad"), yaw_tolerance_rad)
+    return {
+        "timing_half_width_95_s": timing, "timing_tolerance_s": timing_tolerance_s,
+        "timing_meets_tolerance": timing_meets,
+        "local_yaw_half_width_95_rad": yaw, "yaw_tolerance_rad": yaw_tolerance_rad,
+        "yaw_meets_tolerance": yaw_meets,
+    }
 
 
 def selection_experiment(acceleration=0.2, sigma=0.03, tau=0.12):
@@ -163,9 +182,30 @@ def selection_experiment(acceleration=0.2, sigma=0.03, tau=0.12):
     return result, segments, metrics
 
 
+def check_precision_reporting(fits):
+    constant = precision_report(fits["constant_rate"], timing_tolerance_s=.020, yaw_tolerance_rad=.02)
+    assert constant["timing_half_width_95_s"] is None and constant["timing_meets_tolerance"] is None
+    assert constant["local_yaw_half_width_95_rad"] is None and constant["yaw_meets_tolerance"] is None
+    for name, expected_s, passes in [("accelerating", .014, True), ("weak_acceleration", 28., False)]:
+        assert fits[name]["local_report"]["jacobian_full_column_rank"]
+        report = precision_report(fits[name], timing_tolerance_s=.020)
+        np.testing.assert_allclose(report["timing_half_width_95_s"], expected_s, rtol=.005)
+        assert report["timing_meets_tolerance"] is passes and report["yaw_meets_tolerance"] is None
+    fit = fits["accelerating"]
+    no_limits = precision_report(fit)
+    assert no_limits["timing_meets_tolerance"] is None and no_limits["yaw_meets_tolerance"] is None
+    np.testing.assert_allclose(no_limits["local_yaw_half_width_95_rad"], 1.96 * fit["local_std_phi_rad"])
+    split = precision_report(fit, timing_tolerance_s=no_limits["timing_half_width_95_s"], yaw_tolerance_rad=.001)
+    assert split["timing_meets_tolerance"] is True and split["yaw_meets_tolerance"] is False
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--output-dir", type=Path, default=Path(__file__).parent / "results")
+    parser.add_argument("--timing-tolerance-s", type=float,
+                        help="Maximum marginal 95%% timing half-width, in seconds (optional)")
+    parser.add_argument("--yaw-tolerance-rad", type=float,
+                        help="Maximum local marginal 95%% yaw half-width, in radians (optional)")
     args = parser.parse_args()
     out = args.output_dir
     out.mkdir(parents=True, exist_ok=True)
@@ -187,8 +227,8 @@ def main():
         np.testing.assert_allclose(base["singular_values"], converted["singular_values"], atol=1e-12)
         checks.append(name + ": singular values invariant to seconds/milliseconds with physical scales preserved")
         if acceleration == 0:
-            assert fit["tau_s"] is None and fit["individual_parameter_covariance"] is None
-            assert fit["local_report"]["rank"] == 1
+            assert fit["tau_s"] is None and fit["phi_rad"] is None and fit["individual_parameter_covariance"] is None
+            assert fit["local_report"]["rank"] == 1 and not fit["local_report"]["jacobian_full_column_rank"]
             for shift in [-1., -.2, .5, 2.]:
                 prediction = theta(t + truth[0] + shift, 0.) + truth[1] - .8 * shift
                 np.testing.assert_allclose(prediction, theta(t + truth[0], 0.) + truth[1], atol=2e-15)
@@ -236,6 +276,15 @@ def main():
     else:
         raise AssertionError("Rank-one covariance must be refused")
     checks.append("shared SVD covariance: physical covariance invariant to timing units; rank-one input refused")
+    for fit in results.values():
+        try:
+            fit["precision"] = precision_report(fit, timing_tolerance_s=args.timing_tolerance_s,
+                                                yaw_tolerance_rad=args.yaw_tolerance_rad)
+        except ValueError as exc:
+            parser.error(str(exc))
+    check_precision_reporting(results)
+    checks.append("precision: constant rate has no individual intervals; at +/-20 ms accelerating passes and weak acceleration fails")
+    checks.append("precision: timing and local yaw verdicts are independent; omitted tolerances give no verdict")
     results["selection"] = selection
     results["checks"] = checks
     results["assumptions"] = {"reference": "known, unwrapped, theta0=0.2 rad, omega0=0.8 rad/s",

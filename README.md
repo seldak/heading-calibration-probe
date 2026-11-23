@@ -12,9 +12,10 @@ orange cross is the injected truth; it need not lie at the fitted minimum.
 
 **Rank is not precision:** with weak acceleration **a = 10⁻⁴ rad/s²**, the same
 sampling schedule has **rank 2 but timing standard deviation σ_τ = 14.3 s**.
-The report flags its weak direction. Those precision numbers use the known
-measurement-noise level; the weak-motion check is evaluated on noiseless data
-at the injected parameters.
+Its 95% timing interval is about **±28 s**, compared with **±14 ms** for the
+accelerating recording. Only the latter meets the example **±20 ms** requirement.
+Both intervals use the known measurement-noise level; the weak-motion check is
+evaluated on noiseless data at the injected parameters.
 
 ## Reproduce
 
@@ -34,6 +35,15 @@ specific supported interpreter, use
 script verifies that its Python major/minor version matches the selected
 interpreter rather than silently reusing a stale environment. The committed
 report was recorded with Python 3.14.4 on CPU. No GPU performance is claimed.
+
+The reproduction script explicitly sets a 0.020 s timing tolerance and no yaw
+tolerance. To try other requirements without overwriting the committed report:
+
+```sh
+.venv/bin/python heading_probe.py --timing-tolerance-s 0.010 --yaw-tolerance-rad 0.030 --output-dir /tmp/heading-review
+```
+
+Omit either flag to report the corresponding interval without a verdict.
 
 The [reproduction workflow](.github/workflows/reproduce.yml) runs the same command
 on fresh Ubuntu checkouts with Python 3.12, 3.13 and 3.14 for pushes and pull
@@ -67,11 +77,19 @@ injected combination, **0.016 rad**. Its standard deviation is **0.003333 rad**.
 This is the original retained noise realization; the injected truth and the
 likelihood ridge are different objects.
 
-| Motion | Local numerical rank | What the report supports |
-|---|---:|---|
-| Constant, a = 0 | 1 | Combination only; separate estimates withheld |
-| Accelerating, a = 0.2 rad/s² | 2 | Estimated tau = 122.5 ms; local σ_τ = 7.13 ms |
-| Weak acceleration, a = 10⁻⁴ rad/s² | 2 | Weak direction flagged; local σ_τ = 14.3 s |
+| Motion | Local rank | Marginal 95% timing half-width | Meets 20 ms? | Local 95% yaw half-width |
+|---|---:|---:|---|---:|
+| Constant, a = 0 | 1 | — | Not assessable | — |
+| Accelerating, a = 0.2 rad/s² | 2 | 14.0 ms | Yes | 0.0236 rad |
+| Weak acceleration, a = 10⁻⁴ rad/s² | 2 | 27.9 s | No | 22.4 rad |
+
+In the JSON, `local_report.jacobian_full_column_rank` describes only the
+Jacobian. `precision.timing_meets_tolerance` compares **1.96 × σ_τ** to the
+application tolerance (inclusive), not the fitted offset to zero. Yaw has its
+own, local interval and no example tolerance. A `null` verdict means there is
+no individual interval or no tolerance; `false` means an interval was assessed
+and was too wide. Passing is a statement about model-based precision, not bias
+or overall calibration readiness.
 
 These results assume a known reference trajectory and noise model. Reference
 uncertainty, heading wrapping, clock drift, nuisance calibration parameters and

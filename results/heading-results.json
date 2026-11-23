@@ -38,7 +38,15 @@
       ],
       "weak_constrained_scaled_directions": [],
       "worst_constrained_scaled_std": 0.026028960314767677,
-      "individual_parameters_supported": false
+      "jacobian_full_column_rank": false
+    },
+    "precision": {
+      "timing_half_width_95_s": null,
+      "timing_tolerance_s": 0.02,
+      "timing_meets_tolerance": null,
+      "local_yaw_half_width_95_rad": null,
+      "yaw_tolerance_rad": null,
+      "yaw_meets_tolerance": null
     }
   },
   "accelerating": {
@@ -84,7 +92,15 @@
       "null_scaled_directions": [],
       "weak_constrained_scaled_directions": [],
       "worst_constrained_scaled_std": 0.13895918094872095,
-      "individual_parameters_supported": true
+      "jacobian_full_column_rank": true
+    },
+    "precision": {
+      "timing_half_width_95_s": 0.013971515738548922,
+      "timing_tolerance_s": 0.02,
+      "timing_meets_tolerance": true,
+      "local_yaw_half_width_95_rad": 0.023618398546125133,
+      "yaw_tolerance_rad": null,
+      "yaw_meets_tolerance": null
     }
   },
   "weak_acceleration": {
@@ -135,7 +151,15 @@
         ]
       ],
       "worst_constrained_scaled_std": 182.61088574145072,
-      "individual_parameters_supported": true
+      "jacobian_full_column_rank": true
+    },
+    "precision": {
+      "timing_half_width_95_s": 27.943031477098756,
+      "timing_tolerance_s": 0.02,
+      "timing_meets_tolerance": false,
+      "local_yaw_half_width_95_rad": 22.365938664876374,
+      "yaw_tolerance_rad": null,
+      "yaw_meets_tolerance": null
     }
   },
   "selection": {
@@ -191,7 +215,9 @@
     "acceleration with repeated identical sample times remains rank deficient",
     "weak acceleration: full numerical rank does not imply useful precision; near-null direction flagged",
     "near-singular a=1e-8 covariance agrees with exact timing variance; no squared-condition-number failure",
-    "shared SVD covariance: physical covariance invariant to timing units; rank-one input refused"
+    "shared SVD covariance: physical covariance invariant to timing units; rank-one input refused",
+    "precision: constant rate has no individual intervals; at +/-20 ms accelerating passes and weak acceleration fails",
+    "precision: timing and local yaw verdicts are independent; omitted tolerances give no verdict"
   ],
   "assumptions": {
     "reference": "known, unwrapped, theta0=0.2 rad, omega0=0.8 rad/s",

@@ -27,4 +27,4 @@ else
     fi
 fi
 .venv/bin/python -m pip install --disable-pip-version-check -r requirements.txt
-.venv/bin/python heading_probe.py
+.venv/bin/python heading_probe.py --timing-tolerance-s 0.020

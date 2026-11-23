@@ -9,3 +9,5 @@ PASS: acceleration with repeated identical sample times remains rank deficient
 PASS: weak acceleration: full numerical rank does not imply useful precision; near-null direction flagged
 PASS: near-singular a=1e-8 covariance agrees with exact timing variance; no squared-condition-number failure
 PASS: shared SVD covariance: physical covariance invariant to timing units; rank-one input refused
+PASS: precision: constant rate has no individual intervals; at +/-20 ms accelerating passes and weak acceleration fails
+PASS: precision: timing and local yaw verdicts are independent; omitted tolerances give no verdict
